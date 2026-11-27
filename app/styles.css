@@ -105,13 +105,37 @@ main { max-width: 1080px; margin: 0 auto; padding: 0 20px 40px; }
 
 .controls {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
   gap: 12px;
   margin: 18px 0 8px;
   padding: 16px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+}
+
+.check-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  padding-bottom: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.check-control input {
+  width: auto;
+  accent-color: var(--red);
+}
+
+.check-control span {
+  display: inline;
+  margin-bottom: 0;
+  font-size: 14px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
 }
 
 .control span {

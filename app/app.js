@@ -10,6 +10,7 @@ const categoryEl = document.getElementById("category");
 const storeEl = document.getElementById("store");
 const minDiscountEl = document.getElementById("minDiscount");
 const sortEl = document.getElementById("sort");
+const realOnlyEl = document.getElementById("realOnly");
 
 function money(n) {
   return "$" + n.toFixed(2).replace(/\.00$/, "");
@@ -80,12 +81,17 @@ function cardHtml(d) {
 
 function readHash() {
   const params = new URLSearchParams(location.hash.slice(1));
+  // The min-discount select only offers 0/20/40/50: snap any other value
+  // (e.g. a hand-typed #min=30 link) to a valid option instead of leaving
+  // the select and the filter disagreeing with each other.
+  const min = params.get("min") || "0";
   return {
     q: params.get("q") || "",
     category: params.get("category") || "",
     store: params.get("store") || "",
-    min: params.get("min") || "0",
+    min: ["0", "20", "40", "50"].includes(min) ? min : "0",
     sort: params.get("sort") || "discount",
+    real: params.get("real") === "1",
   };
 }
 
@@ -96,6 +102,7 @@ function writeHash() {
   if (storeEl.value) params.set("store", storeEl.value);
   if (minDiscountEl.value !== "0") params.set("min", minDiscountEl.value);
   if (sortEl.value !== "discount") params.set("sort", sortEl.value);
+  if (realOnlyEl.checked) params.set("real", "1");
   const next = params.toString();
   history.replaceState(null, "", next ? "#" + next : location.pathname);
 }
@@ -107,6 +114,7 @@ function visibleDeals() {
     if (categoryEl.value && d.category !== categoryEl.value) return false;
     if (storeEl.value && d.store !== storeEl.value) return false;
     if (discountPct(d) < min) return false;
+    if (realOnlyEl.checked && verdictOf(d).cls !== "real") return false;
     if (q) {
       const hay = (d.product + " " + d.store + " " + d.category).toLowerCase();
       if (!hay.includes(q)) return false;
@@ -114,10 +122,14 @@ function visibleDeals() {
     return true;
   });
   const sort = sortEl.value;
-  if (sort === "discount") list.sort((a, b) => discountPct(b) - discountPct(a));
-  if (sort === "price-asc") list.sort((a, b) => a.sale - b.sale);
-  if (sort === "price-desc") list.sort((a, b) => b.sale - a.sale);
-  if (sort === "name") list.sort((a, b) => a.product.localeCompare(b.product));
+  // Ties break deterministically: by dollars saved, then by name, so the
+  // order never depends on the (arbitrary) order deals sit in deals.js.
+  const bySaved = (a, b) => (b.usual - b.sale) - (a.usual - a.sale);
+  const byName = (a, b) => a.product.localeCompare(b.product);
+  if (sort === "discount") list.sort((a, b) => discountPct(b) - discountPct(a) || bySaved(a, b) || byName(a, b));
+  if (sort === "price-asc") list.sort((a, b) => a.sale - b.sale || byName(a, b));
+  if (sort === "price-desc") list.sort((a, b) => b.sale - a.sale || byName(a, b));
+  if (sort === "name") list.sort(byName);
   return list;
 }
 
@@ -152,8 +164,9 @@ categoryEl.value = initial.category;
 storeEl.value = initial.store;
 minDiscountEl.value = initial.min;
 sortEl.value = initial.sort;
+realOnlyEl.checked = initial.real;
 
-for (const el of [searchEl, categoryEl, storeEl, minDiscountEl, sortEl]) {
+for (const el of [searchEl, categoryEl, storeEl, minDiscountEl, sortEl, realOnlyEl]) {
   el.addEventListener("input", () => { writeHash(); render(); });
 }
 
