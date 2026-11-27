@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DealHound — Black Friday Deal Finder 2026</title>
+<meta name="description" content="Real Black Friday and Cyber Monday deals, checked by hand on 27 Nov 2026. Every deal shows its store, sale price, usual price, check time and source.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">DH</span>
+      <div>
+        <h1>DealHound</h1>
+        <p class="tagline">Black Friday deal finder — real deals, checked by hand</p>
+      </div>
+    </div>
+    <div class="sale-badge">BLACK FRIDAY<br><span>27 NOV – 1 DEC 2026</span></div>
+  </div>
+</header>
+
+<main>
+  <section class="stats" id="stats" aria-label="Summary"></section>
+
+  <section class="controls" aria-label="Search and filter deals">
+    <label class="control search-control">
+      <span>Search deals</span>
+      <input id="search" type="search" placeholder="Try “airpods”, “laptop”, “lego”…"
+             autocomplete="off">
+    </label>
+    <label class="control">
+      <span>Category</span>
+      <select id="category"></select>
+    </label>
+    <label class="control">
+      <span>Store</span>
+      <select id="store"></select>
+    </label>
+    <label class="control">
+      <span>Minimum discount</span>
+      <select id="minDiscount">
+        <option value="0">Any discount</option>
+        <option value="20">20% off or more</option>
+        <option value="40">40% off or more</option>
+        <option value="50">50% off or more</option>
+      </select>
+    </label>
+    <label class="control">
+      <span>Sort by</span>
+      <select id="sort">
+        <option value="discount">Biggest discount first</option>
+        <option value="price-asc">Lowest sale price first</option>
+        <option value="price-desc">Highest sale price first</option>
+        <option value="name">Product name A–Z</option>
+      </select>
+    </label>
+  </section>
+
+  <p class="result-count" id="resultCount" role="status"></p>
+  <section class="grid" id="grid" aria-live="polite"></section>
+
+  <section class="how">
+    <h2>How to read a deal</h2>
+    <ul>
+      <li><strong class="verdict-real">REAL DEAL</strong> — a cut of 40% or more, or a record-low price.</li>
+      <li><strong class="verdict-solid">Solid deal</strong> — 20–39% off list, a fair saving.</li>
+      <li><strong class="verdict-modest">Modest cut</strong> — under 20% off. Worth knowing, not worth rushing for.</li>
+    </ul>
+    <p>Every price on this page was read from the store itself or from a deals
+    source that names the store, on <strong>27 November 2026</strong>. Prices move
+    fast during Black Friday week — always re-check the live price at the store
+    before you buy. DealHound is an independent finder and is not affiliated
+    with Amazon, Best Buy, Target, Walmart or any brand shown here.</p>
+  </section>
+</main>
+
+<footer>
+  <p>DealHound · Black Friday 2026 · All prices in US dollars · Prices checked 27 Nov 2026 (WIB 13:20–13:25)</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
